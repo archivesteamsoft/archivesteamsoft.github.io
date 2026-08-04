@@ -358,5 +358,38 @@
 
         document.addEventListener('DOMContentLoaded', updateText);
     </script>
+    <script>
+  const payButton = document.getElementById('heleketPayBtn');
+
+  payButton.addEventListener('click', async () => {
+    // Блокируем кнопку и меняем прозрачность на время загрузки
+    payButton.style.opacity = '0.5';
+    payButton.style.pointerEvents = 'none';
+
+    try {
+      // Замените этот URL на адрес вашего Cloudflare Worker
+      const response = await fetch('https://heleket-payment-proxy.dmitry-gmax.workers.dev/', {
+        method: 'POST'
+      });
+
+      const data = await response.json();
+
+      // Перенаправляем покупателя на только что созданную ссылку оплаты
+      if (data && (data.pay_url || data.url)) {
+        window.location.href = data.pay_url || data.url;
+      } else {
+        alert('Не удалось сформировать ссылку на оплату.');
+        console.error('Ответ от сервера:', data);
+      }
+    } catch (error) {
+      console.error('Ошибка при генерации счета:', error);
+      alert('Ошибка соединения с платежным сервером.');
+    } finally {
+      // Возвращаем кнопку в исходное состояние
+      payButton.style.opacity = '1';
+      payButton.style.pointerEvents = 'auto';
+    }
+  });
+</script>
 </body>
 </html>
