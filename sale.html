@@ -40,7 +40,7 @@
             color: #2e7d32;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         /* Кнопка оплаты */
@@ -58,7 +58,7 @@
             text-align: center;
             transition: background-color 0.2s ease, transform 0.1s ease;
             box-sizing: border-box;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .buy-btn:hover {
@@ -74,13 +74,17 @@
             cursor: not-allowed;
         }
 
-        /* Текст с указанием к оплате */
-        .pay-notice {
+        /* Уведомление об оплате только криптовалютой */
+        .crypto-notice {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
             font-size: 13px;
-            color: #475569;
             text-align: center;
+            padding: 10px;
+            border-radius: 6px;
             margin-bottom: 20px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         /* Блок с особым предупреждением про заглавные буквы */
@@ -122,9 +126,11 @@
         <h1 class="product-title">Приобретение ключа доступа</h1>
         <div class="product-price">5 USD</div>
 
-        <button id="payButton" class="buy-btn" onclick="createInvoice()">Оплатить доступ</button>
+        <button id="payButton" class="buy-btn" onclick="createInvoice()">Оплатить криптовалютой</button>
 
-        <p class="pay-notice">Пожалуйста, выберите удобный способ оплаты и следуйте указаниям ниже.</p>
+        <div class="crypto-notice">
+            💳 Оплата производится <strong>только криптовалютой</strong> через платежный сервис Heleket.
+        </div>
 
         <div class="alert-box">
             <strong>⚠️ ВНИМАНИЕ! КРИТИЧЕСКИ ВАЖНО:</strong><br>
@@ -164,7 +170,7 @@
 
                 const data = await response.json();
 
-                // Проверяем, вернул ли Worker ссылку на страницу оплаты
+                // Проверяем полученную ссылку
                 if (data.url) {
                     window.location.href = data.url;
                 } else if (data.checkout_url) {
@@ -174,13 +180,13 @@
                 } else {
                     alert('Ошибка при создании счета: ' + (data.error || JSON.stringify(data)));
                     btn.disabled = false;
-                    btn.innerText = 'Оплатить доступ';
+                    btn.innerText = 'Оплатить криптовалютой';
                 }
             } catch (err) {
                 console.error(err);
                 alert('Произошла ошибка при связи с сервером оплаты.');
                 btn.disabled = false;
-                btn.innerText = 'Оплатить доступ';
+                btn.innerText = 'Оплатить криптовалютой';
             }
         }
     </script>
