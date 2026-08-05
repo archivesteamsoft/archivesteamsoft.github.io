@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Успешная оплата</title>
+  <style>
+    body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #f4f7f6; }
+    .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
+    .code-box { background: #eef2ff; border: 2px dashed #6366f1; padding: 15px; font-size: 20px; font-weight: bold; color: #4338ca; border-radius: 8px; margin: 20px 0; letter-spacing: 1px; word-break: break-all; }
+    .loader { border: 4px solid #f3f3f3; border-top: 4px solid #6366f1; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .btn { background: #6366f1; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Проверка оплаты...</h2>
+  <div id="loader" class="loader"></div>
+  <p id="statusText">Пожалуйста, подождите. Мы подтверждаем транзакцию.</p>
+
+  <div id="codeContainer" style="display: none;">
+    <h3>Ваш полученный код:</h3>
+    <div id="codeValue" class="code-box"></div>
+    <p style="font-size: 13px; color: #666;">Сохраните этот код. Повторно получить его можно по этой же ссылке.</p>
+    <a href="index.html" class="btn">Вернуться на главную</a>
+  </div>
+</div>
+
+<script>
+  async function checkPaymentStatus() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('order_id');
+
+    if (!orderId) {
+      document.getElementById('statusText').innerText = "Ошибка: ID заказа не найден в URL.";
+      document.getElementById('loader').style.display = "none";
+      return;
+    }
+
+    try {
+      // Запрос статуса оплаты у Cloudflare Worker
+      const response = await fetch(`https://heleket-payment-proxy.dmitry-gmax.workers.dev/check-order?order_id=${orderId}`);
+      const data = await response.json();
+
+      if (data.paid && data.code) {
+        // Оплата подтверждена
+        document.querySelector('h2').innerText = "Оплата успешно прошла!";
+        document.getElementById('loader').style.display = "none";
+        document.getElementById('statusText').style.display = "none";
+
+        document.getElementById('codeValue').innerText = data.code;
+        document.getElementById('codeContainer').style.display = "block";
+      } else {
+        // Оплата еще обрабатывается, делаем повторную проверку через 3 секунды
+        setTimeout(checkPaymentStatus, 3000);
+      }
+    } catch (err) {
+      console.error("Ошибка проверки:", err);
+      setTimeout(checkPaymentStatus, 4000);
+    }
+  }
+
+  // Запускаем проверку при загрузке страницы
+  checkPaymentStatus();
+</script>
+
+</body>
+</html>
