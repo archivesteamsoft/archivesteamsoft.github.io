@@ -17,6 +17,8 @@
         .feature-card:hover { border-color: #3b82f6; transform: translateY(-5px); transition: all 0.3s ease; }
         .btn-donate { background: linear-gradient(90deg, #f59e0b, #d97706); transition: all 0.3s ease; }
         .btn-donate:hover { box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); transform: scale(1.05); }
+        .btn-buy { background: linear-gradient(90deg, #6366f1, #8b5cf6); transition: all 0.3s ease; }
+        .btn-buy:hover { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); transform: scale(1.05); }
         .lang-switch { cursor: pointer; border: 1px solid rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 6px; transition: 0.2s; }
         .lang-switch:hover { background: rgba(255,255,255,0.1); }
         .platform-btn { transition: all 0.2s ease; }
@@ -41,6 +43,10 @@
                     <i class="fas fa-globe mr-1"></i> <span id="lang-label">EN</span>
                 </button>
 
+                <a href="sale.html" class="btn-buy px-4 py-2 rounded-lg text-white font-bold flex items-center gap-2">
+                    <i class="fas fa-key"></i> <span data-key="buy_nav">Купить ключ ($5)</span>
+                </a>
+
                 <a href="https://donatepay.eu/don/46859" class="btn-donate px-4 py-2 rounded-lg text-white font-bold flex items-center gap-2">
                     <i class="fas fa-heart"></i> <span data-key="donate">Donate</span>
                 </a>
@@ -56,14 +62,24 @@
 
     <header class="py-16 px-6 text-center">
         <div class="max-w-4xl mx-auto">
-            <div data-key="badge" class="inline-block px-4 py-1 border border-blue-500/30 rounded-full text-blue-400 text-sm mb-6 bg-blue-500/10">
+            <div data-key="badge" class="inline-block px-4 py-1 border border-blue-500/30 rounded-full text-blue-400 text-sm mb-4 bg-blue-500/10">
                 🚀 Всё необходимое для загрузки в одном месте
             </div>
+
+            <div class="mb-8 p-4 rounded-2xl bg-indigo-900/30 border border-indigo-500/30 text-indigo-200 text-sm max-w-2xl mx-auto flex items-center gap-3 text-left">
+                <i class="fas fa-clock text-indigo-400 text-2xl flex-shrink-0"></i>
+                <div>
+                    <span data-key="trial_notice" class="block leading-relaxed">
+                        <b>Пробный период:</b> Бесплатная триал-версия активна 15 дней. По истечении триала стоимость бессрочного активационного ключа составляет всего <b>$5</b>.
+                    </span>
+                </div>
+            </div>
+
             <h1 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
                 <span data-key="hero_title">Загружайте видео на</span> <span class="gradient-text">PC</span> <span data-key="and">и</span> <span class="gradient-android">Android</span>
             </h1>
             <p data-key="hero_sub" class="text-xl text-slate-400 mb-10">
-                Мощные инструменты с открытой лицензией для Windows и mobile устройств.
+                Мощные инструменты с открытой лицензией для Windows и мобильных устройств.
             </p>
             <div class="flex flex-wrap justify-center gap-4">
                 <a href="https://sourceforge.net/projects/ytdowloader/files/YTDownloaders%201.15.1.exe/download" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-2 shadow-lg shadow-blue-500/20 platform-btn">
@@ -72,8 +88,8 @@
                 <a href="https://sourceforge.net/projects/ytsmart/files/YTSmart_1.0.5.apk/download" class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-2 shadow-lg shadow-green-500/20 platform-btn">
                     <i class="fab fa-android"></i> <span data-key="btn_android">Скачать для Android</span>
                 </a>
-                <a href="https://donatepay.eu/don/46859" class="btn-donate text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-2 shadow-lg platform-btn">
-                    <i class="fas fa-coffee"></i> <span data-key="btn_support">Поддержать</span>
+                <a href="sale.html" class="btn-buy text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-2 shadow-lg platform-btn">
+                    <i class="fas fa-shopping-cart"></i> <span data-key="btn_buy_full">Купить ключ ($5)</span>
                 </a>
             </div>
         </div>
@@ -234,14 +250,16 @@
             ru: {
                 release: "Релизы: Май 2026",
                 donate: "Donate",
+                buy_nav: "Купить ключ ($5)",
                 dl_pc: "Скачать PC",
                 badge: "🚀 Всё необходимое для загрузки в одном месте",
+                trial_notice: "<b>Пробный период:</b> Бесплатная триал-версия активна 7 дней. По истечении триала стоимость бессрочного активационного ключа составляет всего <b>$5</b>.",
                 hero_title: "Загружайте видео на",
                 and: "и",
                 hero_sub: "Мощные инструменты с открытой лицензией для Windows и мобильных устройств.",
                 btn_win: "Скачать для Windows",
                 btn_android: "Скачать для Android",
-                btn_support: "Поддержать",
+                btn_buy_full: "Купить ключ ($5)",
                 win_desc: "YTDownloaders — удобная программа с графическим интерфейсом для загрузки видео и аудио. Версия 1.15.1 полностью переписана с нуля: новый интерфейс, поддержка YouTube, Instagram, Vimeo, RuTube и TikTok, предпросмотр превью видео, встроенный английский язык.",
                 portable_desc: "Запуск без установки",
                 installer_desc: "Установщик с интеграцией",
@@ -277,14 +295,16 @@
             en: {
                 release: "Releases: May 2026",
                 donate: "Donate",
+                buy_nav: "Buy Key ($5)",
                 dl_pc: "Download PC",
                 badge: "🚀 Everything you need to download in one place",
+                trial_notice: "<b>Trial Period:</b> Free trial version is active for 7 days. After the trial ends, the cost of a lifetime activation key is only <b>$5</b>.",
                 hero_title: "Download videos to",
                 and: "and",
                 hero_sub: "Powerful open-license tools for Windows and mobile devices.",
                 btn_win: "Download for Windows",
                 btn_android: "Download for Android",
-                btn_support: "Support Project",
+                btn_buy_full: "Buy Key ($5)",
                 win_desc: "YTDownloaders is a user-friendly GUI app for downloading video and audio. Version 1.15.1 is fully rewritten from scratch: new interface, support for YouTube, Instagram, Vimeo, RuTube and TikTok, thumbnail preview, and built-in English language.",
                 portable_desc: "Run without installation",
                 installer_desc: "Installer with system integration",
@@ -331,7 +351,10 @@
             document.querySelectorAll('[data-key]').forEach(elem => {
                 const key = elem.getAttribute('data-key');
                 if (translations[currentLang][key]) {
-                    // Сохраняем ссылки внутри av1_note
+                    if (key === 'trial_notice') {
+                        elem.innerHTML = translations[currentLang][key];
+                        return;
+                    }
                     if (key === 'av1_note') {
                         const link = elem.querySelector('a');
                         elem.innerText = translations[currentLang][key];
