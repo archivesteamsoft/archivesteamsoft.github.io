@@ -1,48 +1,189 @@
-<div style="text-align: center; margin: 20px 0;">
-  <img 
-    src="https://img.shields.io/badge/Оплатить_через-Heleket-blue?style=for-the-badge&logo=bitcoin" 
-    id="heleketPayBtn" 
-    alt="Оплатить" 
-    style="cursor: pointer; transition: transform 0.2s, opacity 0.2s;"
-    onmouseover="this.style.transform='scale(1.05)'"
-    onmouseout="this.style.transform='scale(1)'"
-  >
-</div>
-
-<script>
-  (function() {
-    const payButton = document.getElementById('heleketPayBtn');
-
-    if (!payButton) return;
-
-    payButton.addEventListener('click', async () => {
-      payButton.style.opacity = '0.5';
-      payButton.style.pointerEvents = 'none';
-
-      try {
-        const response = await fetch('https://heleket-payment-proxy.dmitry-gmax.workers.dev/', {
-          method: 'POST'
-        });
-
-        const data = await response.json();
-        console.log("Ответ от сервера:", data);
-
-        const payUrl = data.pay_url || data.url || (data.result && data.result.url) || (data.data && data.data.pay_url);
-
-        if (payUrl) {
-          window.location.href = payUrl;
-        } else {
-          const errorMsg = data.message || data.error || JSON.stringify(data);
-          alert('Ошибка при формировании счета: ' + errorMsg);
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Покупка ключа доступа</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
         }
 
-      } catch (error) {
-        console.error('Ошибка сети:', error);
-        alert('Не удалось связаться с сервером оплаты.');
-      } finally {
-        payButton.style.opacity = '1';
-        payButton.style.pointerEvents = 'auto';
-      }
-    });
-  })();
-</script>
+        .checkout-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 520px;
+            width: 100%;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .product-title {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 32px;
+            color: #2e7d32;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Кнопка оплаты */
+        .buy-btn {
+            display: block;
+            width: 100%;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .buy-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .buy-btn:active {
+            transform: scale(0.99);
+        }
+
+        .buy-btn:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Текст с указанием к оплате */
+        .pay-notice {
+            font-size: 13px;
+            color: #475569;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        /* Блок с особым предупреждением про заглавные буквы */
+        .alert-box {
+            background-color: #fffbeeb0;
+            border: 1px solid #fde68a;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #78350f;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        /* Основной блок дисклеймера и правил */
+        .disclaimer-box {
+            padding: 15px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .disclaimer-text {
+            margin: 0;
+        }
+
+        .disclaimer-text + .disclaimer-text {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-card">
+        <h1 class="product-title">Приобретение ключа доступа</h1>
+        <div class="product-price">500 ₽</div>
+
+        <button id="payButton" class="buy-btn" onclick="createInvoice()">Оплатить доступ</button>
+
+        <p class="pay-notice">Пожалуйста, выберите удобный способ оплаты и следуйте указаниям ниже.</p>
+
+        <div class="alert-box">
+            <strong>⚠️ ВНИМАНИЕ! КРИТИЧЕСКИ ВАЖНО:</strong><br>
+            При вводе полученного кода активации в программу, <strong>ОБЯЗАТЕЛЬНО ВВОДИТЕ ЕГО БОЛЬШИМИ (ЗАГЛАВНЫМИ) БУКВАМИ</strong>. Иначе программа не примет ключ.
+        </div>
+
+        <div class="disclaimer-box">
+            <p class="disclaimer-text">
+                ⚠️ Приобретая код Вы соглашаетесь с тем что используете программу только в личных целях и не допускаете коммерческого распространения контента.
+            </p>
+            <p class="disclaimer-text">
+                Работа сервиса зависит от сторонних API. Разработчик не гарантирует вечную доступность функций.
+            </p>
+            <p class="disclaimer-text">
+                Программа предоставляется по принципу «как есть». Вы соглашаетесь с тем, что разработчики не несут ответственности за возможный ущерб при работе программы, а также за возможные перебои при работе иных сервисов.
+            </p>
+            <p class="disclaimer-text">
+                Возврат средств за неиспользованный период в случае изменений политик третьих лиц не производится.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        async function createInvoice() {
+            const btn = document.getElementById('payButton');
+            btn.disabled = true;
+            btn.innerText = 'Создание счета...';
+
+            try {
+                // Запрос к вашему Cloudflare Worker
+                const response = await fetch('https://heleket-payment-proxy.dmitry-gmax.workers.dev/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                // Проверяем, вернул ли Worker ссылку на страницу оплаты
+                if (data.url) {
+                    window.location.href = data.url;
+                } else if (data.checkout_url) {
+                    window.location.href = data.checkout_url;
+                } else if (data.pay_url) {
+                    window.location.href = data.pay_url;
+                } else {
+                    alert('Ошибка при создании счета: ' + (data.error || JSON.stringify(data)));
+                    btn.disabled = false;
+                    btn.innerText = 'Оплатить доступ';
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Произошла ошибка при связи с сервером оплаты.');
+                btn.disabled = false;
+                btn.innerText = 'Оплатить доступ';
+            }
+        }
+    </script>
+
+</body>
+</html>
